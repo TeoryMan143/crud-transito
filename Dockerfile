@@ -15,4 +15,4 @@ COPY deno.json .
 RUN deno cache main.ts
 RUN deno cache db/config.ts
 
-CMD ["run", "--allow-net", "--allow-env", "--allow-read", "main.ts"]
+CMD ["run", "-A", "main.ts"]
