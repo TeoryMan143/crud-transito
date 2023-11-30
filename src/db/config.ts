@@ -1,6 +1,8 @@
 import postgres from 'https://deno.land/x/postgresjs@v3.4.3/mod.js';
 import { env } from '../core/utils.ts';
 
+console.log(env.DATABASE_HOST);
+
 const sql = postgres({
   host: env.DATABASE_HOST,
   port: parseInt(env.DATABASE_PORT),
