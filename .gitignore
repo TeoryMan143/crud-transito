@@ -1,0 +1,5 @@
+vscode
+.env
+*.session.sql
+deno.lock
+*.http

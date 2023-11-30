@@ -1,0 +1,21 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": true
+      },
+      "previewLimit": 50,
+      "server": "ep-twilight-dust-94434929.us-east-2.aws.neon.fl0.io",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "crud-vehicles",
+      "database": "crud-db",
+      "username": "fl0user",
+      "password": "bIRD75OMywZK"
+    }
+  ]
+}

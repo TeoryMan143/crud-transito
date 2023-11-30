@@ -1,0 +1,22 @@
+{
+  "imports": {
+    "express": "npm:/express@4.18.2",
+    "deno/": "https://deno.land/std@0.206.0/",
+    "zod":"https://deno.land/x/zod@v3.22.4/mod.ts"
+  },
+  "fmt": {
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["src/"],
+    "exclude": ["src/testdata/", "data/fixtures/**/*.ts"]
+  },
+  "lint": {
+    "include": ["src/"]
+  },
+  "tasks": {
+    "dev": "deno run -A --watch src/main.ts"
+  }
+}
