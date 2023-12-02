@@ -1,4 +1,4 @@
-FROM denoland/deno
+FROM denoland/deno:1.38.4
 
 EXPOSE 8080
 
@@ -14,5 +14,6 @@ COPY deno.json .
 
 RUN deno cache main.ts
 RUN deno cache db/config.ts
+RUN deno cache core/utils.ts
 
 CMD ["run", "-A", "main.ts"]
