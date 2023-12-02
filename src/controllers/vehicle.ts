@@ -13,6 +13,10 @@ export class VehicleController {
 
   constructor({ model }: { model: VehicleModel }) {
     this.model = model;
+    this.get = this.get.bind(this);
+    this.getById = this.getById.bind(this);
+    this.create = this.create.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   async get(req: Request, res: Response) {
