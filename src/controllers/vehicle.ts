@@ -9,21 +9,27 @@ import {
 import { VehicleModel } from '../models/vehicle.ts';
 
 export class VehicleController {
-  static async get(req: Request, res: Response) {
+  private readonly model: VehicleModel;
+
+  constructor({ model }: { model: VehicleModel }) {
+    this.model = model;
+  }
+
+  async get(req: Request, res: Response) {
     if (!req.query.cedula && !req.query.owner) {
-      const vehicles = await VehicleModel.getAll();
+      const vehicles = await this.model.getAll();
       return res.json(vehicles);
     }
 
     if (req.query.cedula) {
-      const vehicle = await VehicleModel.getByCedula(
+      const vehicle = await this.model.getByCedula(
         req.query.cedula as string,
       );
       if (vehicle) return res.json(vehicle);
     }
 
     if (req.query.owner) {
-      const vehicle = await VehicleModel.getByOwnerId(
+      const vehicle = await this.model.getByOwnerId(
         req.query.owner as string,
       );
 
@@ -37,7 +43,7 @@ export class VehicleController {
     });
   }
 
-  static async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -46,7 +52,7 @@ export class VehicleController {
       });
     }
 
-    const vehicle = await VehicleModel.getById(id);
+    const vehicle = await this.model.getById(id);
 
     if (!vehicle) {
       return res.status(404).json({
@@ -57,7 +63,7 @@ export class VehicleController {
     res.json(vehicle);
   }
 
-  static async create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const result = validateVehicle(req.body);
 
     if (!result.success) {
@@ -66,12 +72,12 @@ export class VehicleController {
 
     const vehicle: Vehicle = result.data;
 
-    const newVehicle = await VehicleModel.create(vehicle);
+    const newVehicle = await this.model.create(vehicle);
 
     res.status(201).json(newVehicle);
   }
 
-  static async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -81,7 +87,7 @@ export class VehicleController {
       return;
     }
 
-    const query = await VehicleModel.delete(id);
+    const query = await this.model.delete(id);
 
     if (!query) {
       return res.status(404).json({
@@ -92,7 +98,7 @@ export class VehicleController {
     res.status(202).json(query);
   }
 
-  static async edit(req: Request, res: Response) {
+  async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialVehicle(req.body);
 
@@ -102,7 +108,7 @@ export class VehicleController {
 
     const vehicle = result.data;
 
-    const query = await VehicleModel.edit(id, vehicle);
+    const query = await this.model.edit(id, vehicle);
 
     if (!query) {
       return res.status(404).json({

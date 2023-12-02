@@ -2,31 +2,31 @@ import sql from '../db/config.ts';
 import type { PartialVehicle, Vehicle } from '../core/schemas.ts';
 
 export class VehicleModel {
-  static async getAll() {
+  async getAll() {
     return await sql`SELECT * FROM vehicles;`;
   }
 
-  static async getById(id: string) {
+  async getById(id: string) {
     const result = await sql`SELECT * FROM vehicles WHERE id = ${id}`;
     if (result.length === 0) return null;
     return result[0];
   }
 
-  static async getByCedula(cedula: string) {
+  async getByCedula(cedula: string) {
     const result =
       await sql`SELECT vehicles.* FROM vehicles JOIN citizens ON vehicles.owner = citizens.id WHERE citizens.cedula = ${cedula}`;
     if (result.length === 0) return null;
     return result;
   }
 
-  static async getByOwnerId(id: string) {
+  async getByOwnerId(id: string) {
     const result =
       await sql`SELECT vehicles.* FROM vehicles JOIN citizens ON vehicles.owner = citizens.id WHERE citizens.id = ${id}`;
     if (result.length === 0) return null;
     return result;
   }
 
-  static async create(vehicle: Vehicle) {
+  async create(vehicle: Vehicle) {
     const {
       vtype,
       brand,
@@ -44,7 +44,7 @@ export class VehicleModel {
     return result[0];
   }
 
-  static async delete(id: string) {
+  async delete(id: string) {
     const search = await sql`SELECT * FROM vehicles WHERE id = ${id}`;
     if (search.length === 0) return null;
     await sql`DELETE FROM vehicles WHERE id = ${id}`;
@@ -53,7 +53,7 @@ export class VehicleModel {
     };
   }
 
-  static async edit(id: string, vehicle: PartialVehicle) {
+  async edit(id: string, vehicle: PartialVehicle) {
     const result = await sql`UPDATE vehicles SET ${
       sql(
         vehicle,

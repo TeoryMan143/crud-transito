@@ -2,30 +2,30 @@ import sql from '../db/config.ts';
 import type { Citizen, PartialCitizen } from '../core/schemas.ts';
 
 export class CitizenModel {
-  static async getAll() {
+  async getAll() {
     return await sql`SELECT * FROM citizens;`;
   }
 
-  static async getById(id: string) {
+  async getById(id: string) {
     const result = await sql`SELECT * FROM citizens WHERE id = ${id}`;
     if (result.length === 0) return null;
     return result[0];
   }
 
-  static async getByCedula(cedula: string) {
+  async getByCedula(cedula: string) {
     const result = await sql`SELECT * FROM citizens WHERE cedula = ${cedula}`;
     if (result.length === 0) return null;
     return result[0];
   }
 
-  static async getByVehicleId(vehicleId: string) {
+  async getByVehicleId(vehicleId: string) {
     const result =
       await sql`SELECT citizens.* FROM citizens JOIN vehicles ON citizens.id = vehicles.owner WHERE vehicles.id = ${vehicleId}`;
     if (result.length === 0) return null;
     return result[0];
   }
 
-  static async create(citizen: Citizen) {
+  async create(citizen: Citizen) {
     const { name, last_name, birth_day, cedula, licence_end, address } =
       citizen;
     const result =
@@ -33,7 +33,7 @@ export class CitizenModel {
     return result[0];
   }
 
-  static async delete(id: string) {
+  async delete(id: string) {
     const search = await sql`SELECT * FROM citizens WHERE id = ${id}`;
     if (search.length === 0) return null;
     await sql`DELETE FROM citizens WHERE id = ${id}`;
@@ -42,7 +42,7 @@ export class CitizenModel {
     };
   }
 
-  static async edit(id: string, citizen: PartialCitizen) {
+  async edit(id: string, citizen: PartialCitizen) {
     const result = await sql`UPDATE citizens SET ${
       sql(
         citizen,

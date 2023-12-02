@@ -9,20 +9,26 @@ import {
 import { CitizenModel } from '../models/citizen.ts';
 
 export class CitizenController {
-  static async get(req: Request, res: Response) {
+  private readonly model: CitizenModel;
+
+  constructor({ model }: { model: CitizenModel }) {
+    this.model = model;
+  }
+
+  async get(req: Request, res: Response) {
     if (!req.query.cedula && !req.query.vehicle) {
-      const citizens = await CitizenModel.getAll();
+      const citizens = await this.model.getAll();
       return res.json(citizens);
     }
 
     if (req.query.vehicle) {
-      const citizen = await CitizenModel.getByVehicleId(
+      const citizen = await this.model.getByVehicleId(
         req.query.vehicle as string,
       );
       if (citizen) return res.json(citizen);
     }
 
-    const citizen = await CitizenModel.getByCedula(req.query.cedula as string);
+    const citizen = await this.model.getByCedula(req.query.cedula as string);
 
     if (citizen) {
       return res.json(citizen);
@@ -33,7 +39,7 @@ export class CitizenController {
     });
   }
 
-  static async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -42,7 +48,7 @@ export class CitizenController {
       });
     }
 
-    const citizen = await CitizenModel.getById(id);
+    const citizen = await this.model.getById(id);
 
     if (!citizen) {
       return res.status(404).json({
@@ -53,7 +59,7 @@ export class CitizenController {
     res.json(citizen);
   }
 
-  static async create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const result = validateCitizen(req.body);
 
     if (!result.success) {
@@ -62,12 +68,12 @@ export class CitizenController {
 
     const citizen: Citizen = result.data;
 
-    const newCitizen = await CitizenModel.create(citizen);
+    const newCitizen = await this.model.create(citizen);
 
     res.status(201).json(newCitizen);
   }
 
-  static async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -77,7 +83,7 @@ export class CitizenController {
       return;
     }
 
-    const query = await CitizenModel.delete(id);
+    const query = await this.model.delete(id);
 
     if (!query) {
       return res.status(404).json({
@@ -88,7 +94,7 @@ export class CitizenController {
     res.status(202).json(query);
   }
 
-  static async edit(req: Request, res: Response) {
+  async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialCitizen(req.body);
 
@@ -98,7 +104,7 @@ export class CitizenController {
 
     const citizen = result.data;
 
-    const query = await CitizenModel.edit(id, citizen);
+    const query = await this.model.edit(id, citizen);
 
     if (!query) {
       return res.status(404).json({

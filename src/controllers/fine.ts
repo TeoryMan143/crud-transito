@@ -9,21 +9,27 @@ import {
 import { FineModel } from '../models/fine.ts';
 
 export class FineController {
-  static async get(req: Request, res: Response) {
+  private readonly model: FineModel;
+
+  constructor({ model }: { model: FineModel }) {
+    this.model = model;
+  }
+
+  async get(req: Request, res: Response) {
     if (!req.query.citizen && !req.query.vehicle) {
-      const fines = await FineModel.getAll();
+      const fines = await this.model.getAll();
       return res.json(fines);
     }
 
     if (req.query.vehicle) {
-      const fine = await FineModel.getByVehicleId(
+      const fine = await this.model.getByVehicleId(
         req.query.vehicle as string,
       );
 
       if (fine) return res.json(fine);
     }
     if (req.query.citizen) {
-      const fine = await FineModel.getByCitizenId(req.query.citizen as string);
+      const fine = await this.model.getByCitizenId(req.query.citizen as string);
 
       if (fine) return res.json(fine);
     }
@@ -33,7 +39,7 @@ export class FineController {
     });
   }
 
-  static async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -42,7 +48,7 @@ export class FineController {
       });
     }
 
-    const fine = await FineModel.getById(id);
+    const fine = await this.model.getById(id);
 
     if (!fine) {
       return res.status(404).json({
@@ -53,7 +59,7 @@ export class FineController {
     res.json(fine);
   }
 
-  static async create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const result = validateFine(req.body);
 
     if (!result.success) {
@@ -62,12 +68,12 @@ export class FineController {
 
     const fine: Fine = result.data;
 
-    const newFine = await FineModel.create(fine);
+    const newFine = await this.model.create(fine);
 
     res.status(201).json(newFine);
   }
 
-  static async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
@@ -77,7 +83,7 @@ export class FineController {
       return;
     }
 
-    const query = await FineModel.delete(id);
+    const query = await this.model.delete(id);
 
     if (!query) {
       return res.status(404).json({
@@ -88,7 +94,7 @@ export class FineController {
     res.status(202).json(query);
   }
 
-  static async edit(req: Request, res: Response) {
+  async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialFine(req.body);
 
@@ -98,7 +104,7 @@ export class FineController {
 
     const citizen = result.data;
 
-    const query = await FineModel.edit(id, citizen);
+    const query = await this.model.edit(id, citizen);
 
     if (!query) {
       return res.status(404).json({

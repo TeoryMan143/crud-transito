@@ -17,5 +17,10 @@
       "username": "fl0user",
       "password": "bIRD75OMywZK"
     }
-  ]
+  ],
+  "rest-client.environmentVariables": {
+    "deploy": {
+      "baseUrl": "https://fair-bobcat-67.deno.dev",
+    }
+  }
 }

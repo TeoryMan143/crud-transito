@@ -1,24 +1,12 @@
-// @deno-types="npm:@types/express@4.17.15"
-import express from 'express';
-import cors from 'npm:/cors@2.8.5';
-import { env } from './core/utils.ts';
+import { createApp } from './app.ts';
+import { CitizenModel } from './models/citizen.ts';
+import { VehicleModel } from './models/vehicle.ts';
+import { FineModel } from './models/fine.ts';
 
-import { vehicleRouter } from './routes/vehicle.ts';
-import { citizenRouter } from './routes/citizen.ts';
-import { fineRouter } from './routes/fine.ts';
+const citizenModel = new CitizenModel();
+const vehicleModel = new VehicleModel();
+const fineModel = new FineModel();
 
-const app = express();
+createApp({ citizenModel, vehicleModel, fineModel });
 
-const PORT = env.PORT || 8080;
-
-app.use(express.json());
-app.use(cors());
-app.disable('x-powered-by');
-
-app.use('/vehicle', vehicleRouter);
-app.use('/citizen', citizenRouter);
-app.use('/fine', fineRouter);
-
-app.listen(PORT, () => {
-  console.log(`Listening at port ${PORT}`);
-});
+console.log(Deno.env.get('PORT'));
