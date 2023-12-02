@@ -1,6 +1,4 @@
-import { load } from 'deno/dotenv/mod.ts';
-
-export const env = await load();
+export const env = Deno.env.toObject();
 
 export const isUUID = (text: string) => {
   const regex =
