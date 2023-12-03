@@ -17,6 +17,7 @@ export class FineController {
     this.getById = this.getById.bind(this);
     this.delete = this.delete.bind(this);
     this.edit = this.edit.bind(this);
+    this.create = this.create.bind(this);
   }
 
   async get(req: Request, res: Response) {

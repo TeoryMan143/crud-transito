@@ -15,8 +15,9 @@ export class VehicleController {
     this.model = model;
     this.get = this.get.bind(this);
     this.getById = this.getById.bind(this);
-    this.create = this.create.bind(this);
     this.delete = this.delete.bind(this);
+    this.edit = this.edit.bind(this);
+    this.create = this.create.bind(this);
   }
 
   async get(req: Request, res: Response) {

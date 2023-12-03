@@ -2,7 +2,10 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.unstable": true,
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[typescript]": {
+    "togglequotes.chars": ["\"", "'", "`"],
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
   "sqltools.connections": [
     {
       "pgOptions": {
@@ -20,7 +23,7 @@
   ],
   "rest-client.environmentVariables": {
     "deploy": {
-      "baseUrl": "https://fair-bobcat-67.deno.dev",
+      "baseUrl": "https://fair-bobcat-67.deno.dev"
     }
   }
 }
