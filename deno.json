@@ -1,8 +1,8 @@
 {
   "imports": {
     "express": "npm:/express@4.18.2",
-    "deno/": "https://deno.land/std@0.206.0/",
-    "zod":"https://deno.land/x/zod@v3.22.4/mod.ts"
+    "deno/": "https://deno.land/std@0.208.0/",
+    "zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
   },
   "fmt": {
     "lineWidth": 80,
