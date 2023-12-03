@@ -23,7 +23,11 @@ export class FineController {
   async get(req: Request, res: Response) {
     if (!req.query.citizen && !req.query.vehicle) {
       const fines = await this.model.getAll();
-      return res.json(fines);
+      return res.json({
+        error: null,
+        message: 'Fines found',
+        result: fines,
+      });
     }
 
     if (req.query.vehicle) {
@@ -31,16 +35,28 @@ export class FineController {
         req.query.vehicle as string,
       );
 
-      if (fine) return res.json(fine);
+      return res.json({
+        error: null,
+        message: 'Fine found',
+        result: fine,
+      });
     }
     if (req.query.citizen) {
       const fine = await this.model.getByCitizenId(req.query.citizen as string);
 
-      if (fine) return res.json(fine);
+      if (fine) {
+        return res.json({
+          error: null,
+          message: 'Fine found',
+          result: fine,
+        });
+      }
     }
 
     res.status(404).json({
       error: 'Fine not found',
+      message: 'Fine not found',
+      result: null,
     });
   }
 
@@ -50,6 +66,8 @@ export class FineController {
     if (!isUUID(id)) {
       return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
     }
 
@@ -58,34 +76,49 @@ export class FineController {
     if (!fine) {
       return res.status(404).json({
         error: 'Fine not found',
+        message: 'Fine not found',
+        result: null,
       });
     }
 
-    res.json(fine);
+    res.json({
+      error: null,
+      message: 'Fine found',
+      result: fine,
+    });
   }
 
   async create(req: Request, res: Response) {
     const result = validateFine(req.body);
 
     if (!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message) });
+      return res.status(400).json({
+        error: JSON.parse(result.error.message),
+        message: 'Invalid format',
+        result: null,
+      });
     }
 
     const fine: Fine = result.data;
 
     const newFine = await this.model.create(fine);
 
-    res.status(201).json(newFine);
+    res.status(201).json({
+      error: null,
+      message: 'Fine created',
+      result: newFine,
+    });
   }
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      res.status(404).json({
+      return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
-      return;
     }
 
     const query = await this.model.delete(id);
@@ -93,18 +126,36 @@ export class FineController {
     if (!query) {
       return res.status(404).json({
         error: 'Fine not found',
+        message: 'Fine not found',
+        result: null,
       });
     }
 
-    res.status(202).json(query);
+    res.status(202).json({
+      error: null,
+      message: 'Successfully deleted',
+      result: null,
+    });
   }
 
   async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialFine(req.body);
 
+    if (!isUUID(id)) {
+      return res.status(404).json({
+        error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
+      });
+    }
+
     if (!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message) });
+      return res.status(400).json({
+        error: JSON.parse(result.error.message),
+        message: 'Invalid format',
+        result: null,
+      });
     }
 
     const citizen = result.data;
@@ -114,9 +165,15 @@ export class FineController {
     if (!query) {
       return res.status(404).json({
         error: 'Fine not found',
+        message: 'Fine not found',
+        result: null,
       });
     }
 
-    res.status(200).send(query);
+    res.status(200).send({
+      error: null,
+      message: 'Successfully modified',
+      result: query,
+    });
   }
 }

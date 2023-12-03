@@ -23,24 +23,40 @@ export class CitizenController {
   async get(req: Request, res: Response) {
     if (!req.query.cedula && !req.query.vehicle) {
       const citizens = await this.model.getAll();
-      return res.json(citizens);
+      return res.json({
+        error: null,
+        message: 'Citizens found',
+        result: citizens,
+      });
     }
 
     if (req.query.vehicle) {
       const citizen = await this.model.getByVehicleId(
         req.query.vehicle as string,
       );
-      if (citizen) return res.json(citizen);
+      if (citizen) {
+        return res.json({
+          error: null,
+          message: 'Citizen found',
+          result: citizen,
+        });
+      }
     }
 
     const citizen = await this.model.getByCedula(req.query.cedula as string);
 
     if (citizen) {
-      return res.json(citizen);
+      return res.json({
+        error: null,
+        message: 'Citizen found',
+        result: citizen,
+      });
     }
 
     res.status(404).json({
       error: 'Citizen not found',
+      message: 'Citizen not found',
+      result: null,
     });
   }
 
@@ -50,6 +66,8 @@ export class CitizenController {
     if (!isUUID(id)) {
       return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
     }
 
@@ -58,34 +76,49 @@ export class CitizenController {
     if (!citizen) {
       return res.status(404).json({
         error: 'Citizen not found',
+        message: 'Citizen not found',
+        result: null,
       });
     }
 
-    res.json(citizen);
+    res.json({
+      error: null,
+      message: 'Citizen found',
+      result: citizen,
+    });
   }
 
   async create(req: Request, res: Response) {
     const result = validateCitizen(req.body);
 
     if (!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message) });
+      return res.status(400).json({
+        error: JSON.parse(result.error.message),
+        message: 'Invalid format',
+        result: null,
+      });
     }
 
     const citizen: Citizen = result.data;
 
     const newCitizen = await this.model.create(citizen);
 
-    res.status(201).json(newCitizen);
+    res.status(201).json({
+      error: null,
+      message: 'Citizen created',
+      result: newCitizen,
+    });
   }
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      res.status(404).json({
+      return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
-      return;
     }
 
     const query = await this.model.delete(id);
@@ -93,15 +126,29 @@ export class CitizenController {
     if (!query) {
       return res.status(404).json({
         error: 'Citizen not found',
+        message: 'Citizen not found',
+        result: null,
       });
     }
 
-    res.status(202).json(query);
+    res.status(202).json({
+      error: null,
+      message: 'Successfully deleted',
+      result: null,
+    });
   }
 
   async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialCitizen(req.body);
+
+    if (!isUUID(id)) {
+      return res.status(404).json({
+        error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
+      });
+    }
 
     if (!result.success) {
       return res.status(400).json({ error: JSON.parse(result.error.message) });
@@ -114,9 +161,15 @@ export class CitizenController {
     if (!query) {
       return res.status(404).json({
         error: 'Citizen not found',
+        message: 'Citizen not found',
+        result: null,
       });
     }
 
-    res.status(200).send(query);
+    res.status(200).send({
+      error: null,
+      message: 'Successfully modified',
+      result: query,
+    });
   }
 }

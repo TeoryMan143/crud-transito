@@ -8,5 +8,3 @@ const vehicleModel = new VehicleModel();
 const fineModel = new FineModel();
 
 createApp({ citizenModel, vehicleModel, fineModel });
-
-console.log(Deno.env.get('PORT'));

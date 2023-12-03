@@ -23,14 +23,24 @@ export class VehicleController {
   async get(req: Request, res: Response) {
     if (!req.query.cedula && !req.query.owner) {
       const vehicles = await this.model.getAll();
-      return res.json(vehicles);
+      return res.json({
+        error: null,
+        message: 'Vehicles found',
+        result: vehicles,
+      });
     }
 
     if (req.query.cedula) {
       const vehicle = await this.model.getByCedula(
         req.query.cedula as string,
       );
-      if (vehicle) return res.json(vehicle);
+      if (vehicle) {
+        return res.json({
+          error: null,
+          message: 'Vehicle found',
+          result: vehicle,
+        });
+      }
     }
 
     if (req.query.owner) {
@@ -39,12 +49,18 @@ export class VehicleController {
       );
 
       if (vehicle) {
-        return res.json(vehicle);
+        return res.json({
+          error: null,
+          message: 'Vehicle found',
+          result: vehicle,
+        });
       }
     }
 
     res.status(404).json({
       error: 'Vehicle not found',
+      message: 'Vehicle not found',
+      result: null,
     });
   }
 
@@ -54,6 +70,8 @@ export class VehicleController {
     if (!isUUID(id)) {
       return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
     }
 
@@ -62,34 +80,49 @@ export class VehicleController {
     if (!vehicle) {
       return res.status(404).json({
         error: 'Vehicle not found',
+        message: 'Vehicle not found',
+        result: null,
       });
     }
 
-    res.json(vehicle);
+    res.json({
+      error: null,
+      message: 'Vehicle found',
+      result: vehicle,
+    });
   }
 
   async create(req: Request, res: Response) {
     const result = validateVehicle(req.body);
 
     if (!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message) });
+      return res.status(400).json({
+        error: JSON.parse(result.error.message),
+        message: 'Invalid format',
+        result: null,
+      });
     }
 
     const vehicle: Vehicle = result.data;
 
     const newVehicle = await this.model.create(vehicle);
 
-    res.status(201).json(newVehicle);
+    res.status(201).json({
+      error: null,
+      message: 'Vehicle created',
+      result: newVehicle,
+    });
   }
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      res.status(404).json({
+      return res.status(404).json({
         error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
       });
-      return;
     }
 
     const query = await this.model.delete(id);
@@ -97,15 +130,29 @@ export class VehicleController {
     if (!query) {
       return res.status(404).json({
         error: 'Vehicle not found',
+        message: 'Vehicle not found',
+        result: null,
       });
     }
 
-    res.status(202).json(query);
+    res.status(202).json({
+      error: null,
+      message: 'Successfully deleted',
+      result: query,
+    });
   }
 
   async edit(req: Request, res: Response) {
     const { id } = req.params;
     const result = validatePartialVehicle(req.body);
+
+    if (!isUUID(id)) {
+      return res.status(404).json({
+        error: 'Invalid id',
+        message: 'Invalid id',
+        result: null,
+      });
+    }
 
     if (!result.success) {
       return res.status(400).json({ error: JSON.parse(result.error.message) });
@@ -118,9 +165,15 @@ export class VehicleController {
     if (!query) {
       return res.status(404).json({
         error: 'Vehicle not found',
+        message: 'Vehicle not found',
+        result: null,
       });
     }
 
-    res.status(200).send(query);
+    res.status(200).send({
+      error: null,
+      message: 'Successfully modified',
+      result: query,
+    });
   }
 }

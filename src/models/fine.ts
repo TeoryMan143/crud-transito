@@ -37,9 +37,7 @@ export class FineModel {
     const search = await sql`SELECT * FROM fines WHERE id = ${id}`;
     if (search.length === 0) return null;
     await sql`DELETE FROM fines WHERE id = ${id}`;
-    return {
-      ok: 'Successfully removed',
-    };
+    return true;
   }
 
   async edit(id: string, citizen: PartialFine) {

@@ -1,3 +1,7 @@
+import { load } from 'deno/dotenv/mod.ts';
+
+await load({ export: true });
+
 export const env = Deno.env.toObject();
 
 export const isUUID = (text: string) => {
