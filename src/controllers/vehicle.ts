@@ -21,7 +21,7 @@ export class VehicleController {
   }
 
   async get(req: Request, res: Response) {
-    if (!req.query.cedula && !req.query.owner) {
+    if (!req.query.cedula && !req.query.owner && !req.query.plate) {
       const vehicles = await this.model.getAll();
       return res.json({
         error: null,
@@ -46,6 +46,20 @@ export class VehicleController {
     if (req.query.owner) {
       const vehicle = await this.model.getByOwnerId(
         req.query.owner as string,
+      );
+
+      if (vehicle) {
+        return res.json({
+          error: null,
+          message: 'Vehicle found',
+          result: vehicle,
+        });
+      }
+    }
+
+    if (req.query.plate) {
+      const vehicle = await this.model.getByPlate(
+        req.query.plate as string,
       );
 
       if (vehicle) {

@@ -12,6 +12,12 @@ export class VehicleModel {
     return result[0];
   }
 
+  async getByPlate(plate: string) {
+    const result = await sql`SELECT * FROM vehicles WHERE plate = ${plate}`;
+    if (result.length === 0) return null;
+    return result[0];
+  }
+
   async getByCedula(cedula: string) {
     const result =
       await sql`SELECT vehicles.* FROM vehicles JOIN citizens ON vehicles.owner = citizens.id WHERE citizens.cedula = ${cedula}`;
