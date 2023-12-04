@@ -21,7 +21,7 @@ export class CitizenController {
   }
 
   async get(req: Request, res: Response) {
-    if (!req.query.cedula && !req.query.vehicle) {
+    if (!req.query.cedula && !req.query.vehicle && !req.query.plate) {
       const citizens = await this.model.getAll();
       return res.json({
         error: null,
@@ -33,6 +33,19 @@ export class CitizenController {
     if (req.query.vehicle) {
       const citizen = await this.model.getByVehicleId(
         req.query.vehicle as string,
+      );
+      if (citizen) {
+        return res.json({
+          error: null,
+          message: 'Citizen found',
+          result: citizen,
+        });
+      }
+    }
+
+    if (req.query.plate) {
+      const citizen = await this.model.getByVehiclePlate(
+        req.query.plate as string,
       );
       if (citizen) {
         return res.json({

@@ -25,6 +25,13 @@ export class CitizenModel {
     return result[0];
   }
 
+  async getByVehiclePlate(vehiclePlate: string) {
+    const result =
+      await sql`SELECT citizens.* FROM citizens JOIN vehicles ON citizens.id = vehicles.owner WHERE vehicles.plate = ${vehiclePlate}`;
+    if (result.length === 0) return null;
+    return result[0];
+  }
+
   async create(citizen: Citizen) {
     const { name, last_name, birth_day, cedula, licence_end, address } =
       citizen;

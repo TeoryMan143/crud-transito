@@ -23,7 +23,7 @@
   ],
   "rest-client.environmentVariables": {
     "deploy": {
-      "baseUrl": "https://fair-bobcat-67.deno.dev"
+      "baseUrl": "https://transit-api.deno.dev"
     },
     "local": {
       "baseUrl": "http://localhost:8080"
