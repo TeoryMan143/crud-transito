@@ -21,7 +21,10 @@ export class FineController {
   }
 
   async get(req: Request, res: Response) {
-    if (!req.query.citizen && !req.query.vehicle) {
+    if (
+      !req.query.citizen && !req.query.vehicle && !req.query.cedula &&
+      !req.query.plate
+    ) {
       const fines = await this.model.getAll();
       return res.json({
         error: null,
@@ -41,8 +44,33 @@ export class FineController {
         result: fine,
       });
     }
+
     if (req.query.citizen) {
       const fine = await this.model.getByCitizenId(req.query.citizen as string);
+
+      if (fine) {
+        return res.json({
+          error: null,
+          message: 'Fine found',
+          result: fine,
+        });
+      }
+    }
+
+    if (req.query.cedula) {
+      const fine = await this.model.getByCedula(req.query.cedula as string);
+
+      if (fine) {
+        return res.json({
+          error: null,
+          message: 'Fine found',
+          result: fine,
+        });
+      }
+    }
+
+    if (req.query.plate) {
+      const fine = await this.model.getByPlate(req.query.plate as string);
 
       if (fine) {
         return res.json({

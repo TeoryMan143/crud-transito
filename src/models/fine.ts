@@ -19,9 +19,23 @@ export class FineModel {
     return result;
   }
 
+  async getByCedula(cedula: string) {
+    const result =
+      await sql`SELECT fines.* FROM fines JOIN citizens ON fines.fined_cit = citizens.id WHERE citizens.cedula = ${cedula}`;
+    if (result.length === 0) return null;
+    return result;
+  }
+
   async getByVehicleId(vehicleId: string) {
     const result =
       await sql`SELECT fines.* FROM fines JOIN vehicles ON fines.fined_vehicle = vehicles.id WHERE vehicles.id = ${vehicleId}`;
+    if (result.length === 0) return null;
+    return result;
+  }
+
+  async getByPlate(plate: string) {
+    const result =
+      await sql`SELECT fines.* FROM fines JOIN vehicles ON fines.fined_vehicle = vehicles.id WHERE vehicles.plate = ${plate}`;
     if (result.length === 0) return null;
     return result;
   }
