@@ -56,14 +56,16 @@ export class CitizenController {
       }
     }
 
-    const citizen = await this.model.getByCedula(req.query.cedula as string);
+    if (req.query.cedula) {
+      const citizen = await this.model.getByCedula(req.query.cedula as string);
 
-    if (citizen) {
-      return res.json({
-        error: null,
-        message: 'Citizen found',
-        result: citizen,
-      });
+      if (citizen) {
+        return res.json({
+          error: null,
+          message: 'Citizen found',
+          result: citizen,
+        });
+      }
     }
 
     res.status(404).json({
