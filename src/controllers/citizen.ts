@@ -106,8 +106,6 @@ export class CitizenController {
   async create(req: Request, res: Response) {
     const result = validateCitizen(req.body);
 
-    console.log(req.body);
-
     if (!result.success) {
       return res.status(400).json({
         error: JSON.parse(result.error.message),
