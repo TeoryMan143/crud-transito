@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 
 const vehicleSchema = z.object({
   vtype: z.enum(['Carro', 'Moto']),
